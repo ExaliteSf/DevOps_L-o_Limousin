@@ -1,0 +1,22 @@
+# Claude files
+.claude/
+**/MEMORY.md
+**/memory/
+
+# Node modules
+**/node_modules/
+
+# Environment files
+**/.env
+**/.env.local
+
+# Build outputs
+**/dist/
+**/build/
+
+# Logs
+**/*.log
+
+# OS files
+.DS_Store
+Thumbs.db
