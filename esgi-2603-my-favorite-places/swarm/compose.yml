@@ -1,0 +1,57 @@
+services:
+  manager:
+    build:
+      context: ..
+      dockerfile: Dockerfile.dind
+    privileged: true
+    hostname: manager
+    container_name: swarm-manager
+    environment:
+      DOCKER_TLS_CERTDIR: ""
+    ports:
+      - "80:80"
+      - "19000:9000"
+    volumes:
+      - ./:/swarm
+    networks:
+      - swarm-net
+
+  node1:
+    build:
+      context: ..
+      dockerfile: Dockerfile.dind
+    privileged: true
+    hostname: node1
+    container_name: swarm-node1
+    environment:
+      DOCKER_TLS_CERTDIR: ""
+    networks:
+      - swarm-net
+
+  node2:
+    build:
+      context: ..
+      dockerfile: Dockerfile.dind
+    privileged: true
+    hostname: node2
+    container_name: swarm-node2
+    environment:
+      DOCKER_TLS_CERTDIR: ""
+    networks:
+      - swarm-net
+
+  node3:
+    build:
+      context: ..
+      dockerfile: Dockerfile.dind
+    privileged: true
+    hostname: node3
+    container_name: swarm-node3
+    environment:
+      DOCKER_TLS_CERTDIR: ""
+    networks:
+      - swarm-net
+
+networks:
+  swarm-net:
+    driver: bridge

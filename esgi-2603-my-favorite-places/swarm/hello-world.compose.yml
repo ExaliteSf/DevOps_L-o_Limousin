@@ -1,0 +1,24 @@
+services:
+  hello:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    deploy:
+      replicas: 2
+      placement:
+        constraints:
+          - node.role == worker
+    networks:
+      - hello-net
+
+  hello-global:
+    image: alpine
+    command: ["sh", "-c", "while true; do echo hello from $$(hostname); sleep 5; done"]
+    deploy:
+      mode: global
+    networks:
+      - hello-net
+
+networks:
+  hello-net:
+    driver: overlay

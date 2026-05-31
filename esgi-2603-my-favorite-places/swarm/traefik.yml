@@ -1,0 +1,41 @@
+services:
+  traefik:
+    image: traefik:v3
+    command:
+      - "--api.dashboard=true"
+      - "--log.level=DEBUG"
+      - "--accesslog=true"
+      - "--providers.swarm.endpoint=unix:///var/run/docker.sock"
+      - "--providers.swarm.exposedByDefault=false"
+      - "--providers.swarm.network=web"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - web
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.dashboard.rule=Host(`traefik.swarm.localhost`)"
+        - "traefik.http.routers.dashboard.service=api@internal"
+        - "traefik.http.services.dashboard-noop.loadbalancer.server.port=8080"
+
+  whoami:
+    image: traefik/whoami
+    networks:
+      - web
+    deploy:
+      replicas: 3
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.whoami.rule=Host(`whoami.swarm.localhost`)"
+        - "traefik.http.services.whoami.loadbalancer.server.port=80"
+
+networks:
+  web:
+    external: true
